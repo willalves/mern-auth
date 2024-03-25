@@ -2,6 +2,7 @@ import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import userRoutes from "./routes/user.route.js";
+import authRoutes from "./routes/auth.route.js";
 dotenv.config();
 
 const clientOptions = {
@@ -14,7 +15,7 @@ async function run() {
     await mongoose.connect(process.env.MONGO_PASS, clientOptions);
     await mongoose.connection.db.admin().command({ ping: 1 });
     console.log("You successfully connected to MongoDB!");
-  } finally {
+  } catch {
     // Ensures that the client will close when you finish/error
     await mongoose.disconnect();
   }
@@ -23,8 +24,11 @@ run().catch(console.dir);
 
 const app = express();
 
+app.use(express.json());
+
 app.listen(3000, () => {
   console.log("Server listening on port 3000");
 });
 
 app.use("/api/user", userRoutes);
+app.use("/api/auth", authRoutes);
