@@ -2,13 +2,19 @@ import { Link, useNavigate } from "react-router-dom";
 import { LogIn } from "lucide-react";
 import { useState } from "react";
 import "react-toastify/dist/ReactToastify.min.css";
+import {
+  signInStart,
+  signInSuccess,
+  signInFailure,
+} from "../redux/user/userSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 function SignIn() {
+  const { loading, error } = useSelector((state) => state.user);
   const [formData, setFormData] = useState({});
-  const [error, setError] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
-  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleFormInput = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
@@ -18,8 +24,7 @@ function SignIn() {
     e.preventDefault();
 
     try {
-      setLoading(true);
-      setError(false);
+      dispatch(signInStart());
       setSuccessMessage("");
       const res = await fetch("/api/auth/signin", {
         method: "POST",
@@ -29,18 +34,15 @@ function SignIn() {
         body: JSON.stringify(formData),
       });
       const data = await res.json();
-      setLoading(false);
       if (data.success === false) {
-        setError(true);
+        dispatch(signInFailure(data));
         return;
       }
+      dispatch(signInSuccess(data));
       setSuccessMessage(data.message);
-      setTimeout(() => {
-        navigate("/");
-      }, 2000);
+      navigate("/");
     } catch (error) {
-      setLoading(false);
-      setError(true);
+      dispatch(signInFailure(error));
     }
   };
 
@@ -92,7 +94,7 @@ function SignIn() {
           </Link>
         </div>
         <p className="text-red-600 mt-5 text-sm">
-          {error && "Something went wrong!"}
+          {error ? error.message || "Something went wrong!" : ""}
         </p>
         {successMessage && (
           <p className="text-green-600 mt-5 text-sm">{successMessage}</p>
