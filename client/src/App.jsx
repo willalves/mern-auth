@@ -4,6 +4,7 @@ import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import Profile from "./pages/Profile";
 import Navbar from "./components/Navbar/Navbar";
+import { ToastContainer } from "react-toastify";
 
 function App() {
   const firstNavItems = [
@@ -21,6 +22,7 @@ function App() {
 
   return (
     <BrowserRouter>
+      <ToastContainer />
       <Navbar firstNavItems={firstNavItems} secondNavItems={secondNavItems} />
       <Routes>
         <Route path="/" element={<HomePage />} />

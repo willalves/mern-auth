@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 .auth-wrapper {
-  @apply h-full md:h-fit w-full md:w-[50vw] lg:w-[35vw] xl:w-[25vw] flex flex-col gap-2 bg-white p-4 rounded-md md:shadow-lg;
+  @apply h-full md:h-fit w-full md:w-[50vw] lg:w-[35vw] xl:w-[25vw] flex flex-col gap-2 bg-white p-6 rounded-md md:shadow-lg;
 }
 
 .form-input {
